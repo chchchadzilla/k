@@ -1,0 +1,16 @@
+NotificationRecord(0x1: pkg=com.samsung.android.voc user=UserHandle{0} id=7 tag=null key=...)
+NotificationRecord(0x2: pkg=com.samsung.android.voc user=UserHandle{0} id=8)
+NotificationRecord(0x3: pkg=com.sec.android.app.samsungapps user=UserHandle{0})
+NotificationRecord(0x4: pkg=com.sec.android.app.samsungapps user=UserHandle{0})
+NotificationRecord(0x5: pkg=com.sec.android.app.samsungapps user=UserHandle{0})
+NotificationRecord(0x6: pkg=org.telegram.messenger user=UserHandle{0})
+NotificationRecord(0x7: pkg=com.azure.authenticator user=UserHandle{0})
+NotificationRecord(0x8: pkg=com.chase.sig.android user=UserHandle{0})
+NotificationRecord(0x9: pkg=com.facebook.katana user=UserHandle{0})
+NotificationRecord(0xa: pkg=com.facebook.katana user=UserHandle{0})
+NotificationRecord(0xb: pkg=com.facebook.katana user=UserHandle{0})
+NotificationRecord(0xc: pkg=com.facebook.katana user=UserHandle{0})
+  Notification listeners:
+    ComponentInfo{com.samsung.android.app.routines/...}
+    ComponentInfo{com.google.android.apps.wear/...}
+

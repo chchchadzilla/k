@@ -1,0 +1,32 @@
+# `tuneup.sh notif-mute --preset` revokes the notification permission for these (fully reversible with notif-unmute).
+# These are the system apps that generate promo/nag notifications. Your messages, calls, calendar,
+# banking and authenticator apps are never in this list and are protected anyway.
+com.sec.android.app.samsungapps             # Galaxy Store ("new apps for you", update nags)
+com.samsung.android.voc                     # Samsung Members
+com.samsung.android.app.spage               # Samsung Free
+com.samsung.android.themestore              # Galaxy Themes
+com.samsung.android.app.samsungshop         # Samsung Shop
+com.samsung.android.app.tips                # Tips
+com.samsung.android.game.gamehome           # Game Launcher
+com.samsung.android.game.gametools
+com.sec.spp.push                            # Samsung Push (promo channel)
+com.samsung.android.lool                    # Device Care ("battery usage" nags; protected from removal, not from muting)
+com.samsung.android.sm.devicesecurity
+com.samsung.android.scloud                  # Samsung Cloud "backup now" nags
+com.samsung.android.smartsuggestions
+com.samsung.android.app.sreminder
+com.samsung.android.bixby.agent
+com.samsung.android.oneconnect              # SmartThings promos
+com.google.android.googlequicksearchbox     # Google app / Discover "stories for you"
+com.google.android.youtube                  # YouTube recommendations
+com.google.android.apps.youtube.music
+com.google.android.videos
+com.google.android.apps.tachyon
+com.google.android.apps.bard
+com.android.vending                         # Play Store "update available / app recommendations"
+com.facebook.katana                         # Facebook (if you kept it)
+com.linkedin.android
+com.microsoft.office.outlook
+com.microsoft.skydrive
+com.netflix.mediaclient
+com.spotify.music

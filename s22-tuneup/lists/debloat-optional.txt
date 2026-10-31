@@ -1,0 +1,33 @@
+# Tier 2: only removed with `--with-optional`. Things some people actually use. Read before enabling.
+com.samsung.android.app.watchmanager        # Galaxy Wearable — KEEP if you own a Galaxy Watch/Buds
+com.samsung.android.mateagent               # Galaxy Wearable plugin — same
+com.samsung.android.app.appsedge            # Edge panel: apps
+com.samsung.android.app.taskedge            # Edge panel: tasks
+com.samsung.android.app.clipboardedge       # Edge panel: clipboard
+com.samsung.android.app.cocktailbarservice  # Edge panels engine — removing kills all edge panels
+com.samsung.android.email.provider          # Samsung Email (keep if you use it)
+com.sec.android.app.sbrowser                # Samsung Internet (keep if you use it)
+com.samsung.android.app.notes               # Samsung Notes (S Pen users usually KEEP)
+com.samsung.android.calendar                # Samsung Calendar (keep if you use it)
+com.sec.android.app.shealth                 # Samsung Health
+com.samsung.android.app.spage               # (already in safe)
+com.samsung.android.game.gos                # Game Optimizing Service (throttles games; remove only if you don't game)
+com.sec.spp.push                            # Samsung Push — Samsung Pay/Members/Store notifications ride on this
+com.samsung.android.allshare.service.mediashare  # DLNA/Smart View media sharing
+com.samsung.android.app.smartcapture        # protected; listed for reference only
+com.facebook.katana                         # Facebook app (preloaded as system on Samsung; remove if you don't use it)
+com.linkedin.android                        # LinkedIn preload
+com.microsoft.office.outlook                # Outlook preload
+com.google.android.apps.bard                # Gemini app
+com.google.android.googlequicksearchbox     # Google app (Discover feed, Assistant) — breaks Assistant/search widget
+com.google.android.apps.googleassistant
+com.google.android.youtube                  # YouTube
+com.google.android.gm                       # Gmail
+com.netflix.mediaclient                     # Netflix preload
+com.netflix.partner.activation
+com.spotify.music                           # Spotify preload
+com.samsung.android.app.find                # SmartThings Find
+com.samsung.android.oneconnect              # SmartThings (keep if you have Samsung smart-home gear)
+com.samsung.android.beaconmanager
+com.samsung.android.app.contacts            # protected; reference only
+com.samsung.android.messaging               # protected; reference only

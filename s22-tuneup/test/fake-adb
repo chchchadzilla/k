@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Fake adb for offline tests. Records every call to $FAKE_ADB_LOG and answers like a Samsung S22 Ultra would.
+echo "$*" >> "${FAKE_ADB_LOG:-/dev/null}"
+D="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+case "$1" in
+  get-state) echo device; exit 0;;
+  devices) echo "List of devices attached"; echo "127.0.0.1:40000  device"; exit 0;;
+  pair|connect) echo "ok $2"; exit 0;;
+  shell) shift;;
+  *) exit 0;;
+esac
+STATE="${FAKE_ADB_STATE:-/tmp/fake-adb-state}"; mkdir -p "$STATE"
+removed="$STATE/removed"; touch "$removed"
+sys="$D/pkgs-system.txt"; usr="$D/pkgs-user.txt"
+case "$*" in
+  "pm list packages --user 0"|"pm list packages -f --user 0"|"pm list packages -u --user 0")
+      cat "$sys" "$usr" | grep -vxFf "$removed" | sed 's/^/package:/';;
+  "pm list packages -s --user 0") grep -vxFf "$removed" "$sys" | sed 's/^/package:/';;
+  "pm list packages -3 --user 0") sed 's/^/package:/' "$usr";;
+  "pm list packages -d --user 0") :;;
+  "pm uninstall -k --user 0 "*) p="${!#}"; if [[ "$p" == com.samsung.android.mdx ]]; then echo "Failure [DELETE_FAILED_INTERNAL_ERROR]"; else echo "$p" >> "$removed"; echo Success; fi;;
+  "pm disable-user --user 0 "*) echo "Package ${!#} new state: disabled";;
+  "cmd package install-existing --user 0 "*) p="${!#}"; grep -vxF "$p" "$removed" > "$removed.n"; mv "$removed.n" "$removed"; echo "Package $p installed for user: 0";;
+  "pm enable --user 0 "*) echo "Package ${!#} new state: enabled";;
+  "pm revoke "*|"pm grant "*|"cmd appops set "*|"settings put "*|"pm trim-caches "*|"cmd package bg-dexopt-job") :;;
+  "dumpsys notification --noredact"|"dumpsys notification") cat "$D/dumpsys-notification.txt";;
+  "dumpsys package "*) echo "    android.permission.POST_NOTIFICATIONS: granted=true, flags=[ USER_SET]";;
+  "dumpsys package") echo "big dump";;
+  "dumpsys deviceidle whitelist") printf 'system,com.google.android.gms,10100\nuser,com.facebook.katana,10200\n';;
+  "getprop ro.product.model") echo "SM-S908U";;
+  "getprop ro.build.version.release") echo 15;;
+  "getprop ro.build.version.oneui") echo 70000;;
+  "getprop ro.build.display.id") echo "UP1A.231005.007.S908USQS9EXJ1";;
+  "getprop") echo "[ro.product.model]: [SM-S908U]";;
+  "settings list "*) echo "window_animation_scale=1.0";;
+  "settings get global "*) echo 1.0;;
+  "uptime -p") echo "up 3 days, 4 hours";;
+  "df -h /data") printf 'Filesystem Size Used Avail Use%% Mounted\n/dev/block/dm-50 457G 301G 156G 66%% /data\n';;
+  "cat /proc/meminfo") printf 'MemTotal: 11500000 kB\nMemAvailable: 2100000 kB\n';;
+  "top -b -n 1 -m 12 -s 3") printf 'Tasks: 1\nMem: x\nSwap: y\n  PID USER  %%CPU NAME\n 1234 u0_a1 12.0 com.facebook.katana\n';;
+  *) :;;
+esac

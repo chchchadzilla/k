@@ -1,0 +1,145 @@
+# NEVER touched by debloat or notif-mute. One package name or regex per line.
+# Lines starting with ~ are regexes (matched case-insensitively against the package name).
+
+# --- authenticators / 2FA / password managers (losing these = locked out of accounts) ---
+com.google.android.apps.authenticator2      # Google Authenticator
+com.azure.authenticator                     # Microsoft Authenticator
+com.authy.authy                             # Authy / Twilio Authy
+com.twofasapp                               # 2FAS
+com.beemdevelopment.aegis                   # Aegis
+com.duosecurity.duomobile                   # Duo Mobile
+com.okta.android.auth                       # Okta Verify
+com.x8bit.bitwarden                         # Bitwarden
+com.onepassword.android                     # 1Password
+com.agilebits.onepassword                   # 1Password (legacy id)
+com.lastpass.lpandroid                      # LastPass
+com.dashlane                                # Dashlane
+com.keepassdx.app                           # KeePassDX
+keepass2android.keepass2android             # Keepass2Android
+com.yubico.yubioath                         # Yubico Authenticator
+~authenticat
+~2fa
+~passkey
+~bitwarden
+
+# --- Samsung security / account / payment plumbing ---
+com.samsung.android.authfw                  # Samsung auth framework (biometrics for Pass/Pay)
+com.samsung.android.samsungpass             # Samsung Pass (stored logins!)
+com.samsung.android.samsungpassautofill
+com.samsung.android.spay                    # Samsung Wallet / Pay (cards, keys)
+com.samsung.android.spayfw
+com.samsung.android.dkey                    # Digital car key
+com.osp.app.signin                          # Samsung account
+com.samsung.android.mobileservice           # Samsung Experience Service (account sync)
+com.samsung.android.scloud                  # Samsung Cloud backup
+com.samsung.android.fmm                     # Find My Mobile
+com.samsung.android.knox.containercore
+com.samsung.android.knox.attestation
+com.samsung.knox.securefolder               # Secure Folder (may hold user data)
+com.samsung.android.app.updatecenter
+com.sec.android.soagent                     # software update agent
+com.wssyncmldm                              # software update
+com.samsung.android.sm.devicesecurity       # device protection
+
+# --- Google plumbing ---
+com.google.android.gms                      # Play Services
+com.google.android.gsf
+com.android.vending                         # Play Store (Play Integrity depends on it)
+com.google.android.apps.walletnfcrel        # Google Wallet
+com.google.android.apps.nbu.paisa.user      # Google Pay (some regions)
+com.google.android.apps.messaging           # Google Messages (default SMS on many S22s)
+com.google.android.dialer
+com.google.android.contacts
+com.google.android.apps.maps
+com.google.android.apps.photos
+com.google.android.webview
+com.google.android.trichromelibrary
+com.android.chrome
+com.google.android.apps.wellbeing           # Digital Wellbeing (useful for focus modes)
+
+# --- One UI things that break other things when removed ---
+com.sec.android.app.launcher                # One UI Home
+com.samsung.android.app.dressroom           # Wallpaper & style
+com.samsung.android.provider.filterprovider # Camera crashes without it
+com.sec.android.gallery3d                   # Gallery (camera preview needs it)
+com.samsung.android.widget.pictureframe
+com.sec.android.app.myfiles                 # Settings crashes without it
+com.samsung.android.scpm
+com.samsung.android.honeyboard              # Samsung Keyboard
+com.samsung.android.smartmirroring
+com.samsung.android.app.smartcapture        # screenshots / screen record
+com.samsung.android.app.routines            # Modes & Routines (we use this for quiet hours)
+com.samsung.android.app.telephonyui
+com.samsung.android.incallui
+com.samsung.android.dialer
+com.samsung.android.app.contacts
+com.samsung.android.messaging               # Samsung Messages
+com.samsung.android.calendar
+com.samsung.android.app.reminder
+com.samsung.android.app.notes
+com.sec.android.app.camera
+com.sec.android.app.clockpackage
+com.samsung.android.app.galaxyfinder        # app search in Settings/launcher
+com.samsung.android.service.aircommand      # S Pen Air Command (S22 Ultra has an S Pen)
+com.samsung.android.service.stplatform      # S Pen remote
+com.samsung.android.service.pentastic
+com.samsung.android.app.spen*
+com.samsung.android.sdk.handwriting.*
+com.samsung.android.stickercenter           # keyboard stickers/emoji
+com.samsung.android.wallpaper.res
+com.samsung.android.wifi.softap.resources   # hotspot / mobile data
+com.sec.location.nsflp2                     # GPS
+com.samsung.android.samsungpositioning
+com.sec.android.app.samsungapps             # Galaxy Store (updates Keyboard/Gallery/etc.)
+com.samsung.android.app.omcagent            # carrier config
+com.android.nfc
+com.sec.android.diagmonagent
+com.android.printspooler
+com.android.managedprovisioning
+com.android.backupconfirm
+com.samsung.android.accessibility.talkback
+com.samsung.android.shortcutbackupservice
+com.samsung.android.sm.policy
+com.samsung.android.lool                    # Device Care
+com.samsung.android.app.sharelive           # Quick Share
+com.samsung.android.aware.service
+com.sec.android.daemonapp                   # Samsung Weather widget
+com.samsung.android.net.wifi.wifiguider
+com.samsung.android.tethering*
+~^com\.samsung\.android\.(ipsgeofence|location|sdm)
+~^com\.android\.(systemui|settings|phone|server|providers|bluetooth|mms|wifi|se|keychain|cellbroadcast|location|shell|carrierconfig|emergency|stk)
+~^com\.sec\.(imsservice|epdg|phone|ims|unifiedwfc)
+~^com\.samsung\.(ims|android\.ims|euicc)
+~^com\.samsung\.android\.(kgclient|securitylogagent|server)
+~^com\.qualcomm
+~^org\.codeaurora
+~^com\.sec\.android\.app\.(launcher|soundalive|popupcalculator|desktoplauncher|dexonpc)
+com.samsung.android.rubin.app               # Customization Service (Modes & Routines conditions use it)
+com.samsung.android.dynamiclock
+com.samsung.android.forest                  # Digital Wellbeing (Samsung)
+
+# --- banking / money / health (user data; never mute their alerts) ---
+~bank
+~chase
+~wellsfargo
+~bofa
+~capitalone
+~amex
+~americanexpress
+~discover\.
+~paypal
+~venmo
+~cashapp
+~squareup
+~coinbase
+~robinhood
+~fidelity
+~schwab
+~vanguard
+~mint
+~credit
+~insurance
+~pharmacy
+~health\.
+~medical
+~kaiser
