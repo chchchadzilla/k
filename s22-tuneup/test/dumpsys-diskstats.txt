@@ -1,0 +1,6 @@
+Latency: 4ms [512B Data Write]
+Data-Free: 130000000K / 462000000K total = 28% free
+Package Names: ["com.spotify.music","org.telegram.messenger","com.chase.sig.android","com.azure.authenticator"]
+App Sizes: [157286400, 104857600, 52428800, 31457280]
+App Data Sizes: [524288000, 2097152000, 10485760, 1048576]
+Cache Sizes: [104857600, 52428800, 1048576, 0]

@@ -33,6 +33,8 @@ usage: tuneup.sh <command> [options]
                              dry run by default; --apply removes Tier 1 (lists/debloat-safe.txt) for user $USER_ID
   restore --all|<pkg>...     reinstall/enable packages removed by debloat (from the manifest)
   speed [--apply]            0.5x animations, trim app caches, background dexopt, restrict background for kept bloat
+  unused [--days N]          YOUR installed apps ranked by last use (default: not opened in 60 days), with sizes
+  remove-user-apps <pkg>...  uninstall apps YOU installed (deletes their data; asks per package; protected apps refused)
   all [--yes] [--with-optional] [--carrier]
                              snapshot -> report -> debloat --apply -> notif-mute --preset -> speed --apply -> report
 
@@ -330,6 +332,62 @@ cmd_speed() {
   ok "$n kept preloads restricted from running in background (undo: cmd appops set <pkg> RUN_ANY_IN_BACKGROUND allow)"
 }
 
+# last-used time per package from the system's usage stats (max across daily/weekly/monthly/yearly buckets)
+usage_last_used() {
+  ash dumpsys usagestats --user "$USER_ID" 2>/dev/null | grep -oE 'package=[A-Za-z0-9._]+ .*lastTimeUsed="[^"]+"' \
+    | sed -E 's/^package=([^ ]+) .*lastTimeUsed="([^"]+)".*/\1\t\2/' | sort -k1,1 -k2,2r | awk -F'\t' '!seen[$1]++'
+}
+# sizes per package from dumpsys diskstats -> "pkg<TAB>appMB<TAB>dataMB<TAB>cacheMB"
+disk_sizes() {
+  ash dumpsys diskstats | awk '
+    /^Package Names:/ {n=split(substr($0,index($0,"[")+1), a, /[",\[\] ]+/); for(i=1;i<=n;i++) if(a[i]!="") names[++np]=a[i]}
+    /^App Sizes:/      {n=split(substr($0,index($0,"[")+1), a, /[,\[\] ]+/); for(i=1;i<=n;i++) if(a[i]!="") app[++na]=a[i]}
+    /^App Data Sizes:/ {n=split(substr($0,index($0,"[")+1), a, /[,\[\] ]+/); for(i=1;i<=n;i++) if(a[i]!="") dat[++nd]=a[i]}
+    /^Cache Sizes:/    {n=split(substr($0,index($0,"[")+1), a, /[,\[\] ]+/); for(i=1;i<=n;i++) if(a[i]!="") cac[++nc]=a[i]}
+    END {for(i=1;i<=np;i++) printf "%s\t%d\t%d\t%d\n", names[i], app[i]/1048576, dat[i]/1048576, cac[i]/1048576}'
+}
+cmd_unused() {
+  local days=60; while [[ $# -gt 0 ]]; do case "$1" in --days) days="$2"; shift;; *) die "unknown option $1";; esac; shift; done
+  need_device; load_protected
+  local tmp; tmp=$(mktemp -d)
+  ash pm list packages -3 --user "$USER_ID" | sed 's/^package://' | sort > "$tmp/user"
+  usage_last_used > "$tmp/used"
+  disk_sizes > "$tmp/sizes"
+  local cutoff; cutoff=$(date -d "-$days days" +%Y-%m-%d 2>/dev/null || date -v-"${days}"d +%Y-%m-%d 2>/dev/null || echo 0000-00-00)
+  log "Apps you installed, not opened since $cutoff ($days days). 'never' = no use recorded in the last year."
+  log "Sizes in MB. PROT = protected (authenticator/bank/etc, never removed by this tool)."
+  printf '%-12s %6s %6s %5s  %s\n' LAST_USED APP DATA PROT PACKAGE
+  awk -F'\t' -v cutoff="$cutoff" '
+    FNR==NR {last[$1]=substr($2,1,10); next}
+    FILENAME ~ /sizes$/ {app[$1]=$2; dat[$1]=$3; next}
+    { p=$1; l=(p in last)?last[p]:"never"; if (l=="never" || l<cutoff) printf "%s\t%s\t%s\t%s\n", l, (p in app)?app[p]:"?", (p in dat)?dat[p]:"?", p }' \
+    "$tmp/used" "$tmp/sizes" "$tmp/user" | sort | while IFS=$'\t' read -r l a d p; do
+      local prot="-"; is_protected "$p" && prot="yes"
+      printf '%-12s %6s %6s %5s  %s\n' "$l" "$a" "$d" "$prot" "$p"
+    done
+  log ""
+  log "Total user-installed: $(wc -l < "$tmp/user"). Remove the ones you don't want:  ./tuneup.sh remove-user-apps <pkg> <pkg> ..."
+  rm -rf "$tmp"
+}
+cmd_remove_user_apps() {
+  local -a pkgs=(); while [[ $# -gt 0 ]]; do case "$1" in --yes) YES=1;; *) pkgs+=("$1");; esac; shift; done
+  [[ ${#pkgs[@]} -ge 1 ]] || die "usage: tuneup.sh remove-user-apps [--yes] <pkg>..."
+  set -- "${pkgs[@]}"
+  need_device; load_protected; load_packages
+  local -A user=(); local p r a
+  while read -r p; do [[ -n "$p" ]] && user["$p"]=1; done < <(ash pm list packages -3 --user "$USER_ID" | sed 's/^package://')
+  warn "This is a real uninstall of apps you installed: their data on the phone is deleted (same as uninstalling from the launcher)."
+  for p in "$@"; do
+    [[ -n "${ALL[$p]:-}" ]] || { warn "not installed: $p"; continue; }
+    [[ -n "${user[$p]:-}" ]] || { warn "$p came with the firmware; use debloat for that"; continue; }
+    is_protected "$p" && { warn "refusing protected app: $p"; continue; }
+    if [[ $YES != 1 ]]; then read -r -p "uninstall $p ? [y/N] " a; [[ "$a" == y || "$a" == Y ]] || { log "skipped $p"; continue; }; fi
+    r=$(ash pm uninstall --user "$USER_ID" "$p")
+    if [[ "$r" == *Success* ]]; then ok "uninstalled $p"; printf '%s\tuser-uninstall\t%s\n' "$p" "$(date +%Y%m%d-%H%M%S)" >> "$BACKUP/user-removed.tsv"
+    else warn "failed $p: ${r:-no output}"; fi
+  done
+}
+
 cmd_all() {
   local -a extra=(); while [[ $# -gt 0 ]]; do case "$1" in --yes) YES=1;; --with-optional|--carrier) extra+=("$1");; *) die "unknown option $1";; esac; shift; done
   need_device
@@ -349,6 +407,7 @@ main() {
     snapshot) cmd_snapshot;; report) cmd_report;;
     notif-audit) cmd_notif_audit;; notif-mute) cmd_notif_mute "$@";; notif-unmute) cmd_notif_unmute "$@";;
     debloat) cmd_debloat "$@";; restore) cmd_restore "$@";; speed) cmd_speed "$@";; all) cmd_all "$@";;
+    unused) cmd_unused "$@";; remove-user-apps) cmd_remove_user_apps "$@";;
     ""|-h|--help|help) usage;;
     *) usage; die "unknown command: $cmd";;
   esac

@@ -26,6 +26,9 @@ case "$*" in
   "dumpsys notification --noredact"|"dumpsys notification") cat "$D/dumpsys-notification.txt";;
   "dumpsys package "*) echo "    android.permission.POST_NOTIFICATIONS: granted=true, flags=[ USER_SET]";;
   "dumpsys package") echo "big dump";;
+  "dumpsys usagestats --user 0") cat "$D/dumpsys-usagestats.txt";;
+  "dumpsys diskstats") cat "$D/dumpsys-diskstats.txt";;
+  "pm uninstall --user 0 "*) p="${!#}"; echo "$p" >> "$removed"; echo Success;;
   "dumpsys deviceidle whitelist") printf 'system,com.google.android.gms,10100\nuser,com.facebook.katana,10200\n';;
   "getprop ro.product.model") echo "SM-S908U";;
   "getprop ro.build.version.release") echo 15;;

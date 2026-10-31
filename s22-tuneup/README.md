@@ -61,7 +61,15 @@ Reboot afterwards. If anything feels off: `./tuneup.sh restore --all` and `./tun
 | `debloat` | dry run of Tier 1 (`lists/debloat-safe.txt`): Bixby, Samsung Free, Members, Themes, Tips, AR Zone/Emoji, Game Launcher, Kids, Smart Switch, Meta/Microsoft/Google preload stubs, Link to Windows, Meet, YouTube Music… |
 | `debloat --apply` | does it (`pm uninstall -k --user 0`, data kept, restorable). `--with-optional` adds `lists/debloat-optional.txt` (Galaxy Wearable, edge panels, Samsung Internet/Email, preloaded Facebook/Netflix/Spotify/LinkedIn/Outlook…: read the list first). `--carrier` adds carrier bloat matched by `lists/carrier-patterns.txt`, voicemail excluded. `--mode disable` uses `pm disable-user` instead. |
 | `restore --all` / `<pkg>` | `cmd package install-existing` (or `pm enable`) from the manifest `~/s22-tuneup-backups/removed.tsv` |
+| `unused [--days N]` | apps **you** installed, ranked by last use from the system's usage stats, with app and data size in MB. Default: not opened in 60 days. The biggest lever on a phone with hundreds of user apps. |
+| `remove-user-apps <pkg>…` | real uninstall of apps you installed (their data goes, same as uninstalling from the launcher). Asks per package, refuses protected apps and firmware packages. |
 | `speed --apply` | animation scales 1.0 → 0.5, `pm trim-caches` (cache only, no data), run background dexopt now, and set `RUN_ANY_IN_BACKGROUND=ignore` on kept preloads |
+
+## RAM Plus
+
+If `report` shows gigabytes of swap in use minutes after a reboot, One UI is compressing memory because too much is
+resident. Settings > Device care > Memory > **RAM Plus**: set it off (or the smallest value) and reboot. On a 12 GB
+phone that trades a little multitasking headroom for noticeably less stutter.
 
 ## The notification problem specifically
 

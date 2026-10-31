@@ -1,0 +1,9 @@
+  In-memory daily stats
+    user=0
+      package=org.telegram.messenger totalTimeUsed="00:12:00" totalTimeVisible="00:12:00" lastTimeUsed="2026-10-31 06:50:00" lastTimeVisible="2026-10-31 06:50:00" appLaunchCount=4
+      package=com.termux totalTimeUsed="00:40:00" lastTimeUsed="2026-10-31 07:10:00" appLaunchCount=2
+  In-memory yearly stats
+    user=0
+      package=com.spotify.music totalTimeUsed="01:00:00" lastTimeUsed="2026-03-02 10:00:00" appLaunchCount=1
+      package=org.telegram.messenger totalTimeUsed="40:00:00" lastTimeUsed="2026-10-31 06:50:00" appLaunchCount=400
+      package=com.azure.authenticator totalTimeUsed="00:01:00" lastTimeUsed="2026-01-15 09:00:00" appLaunchCount=3
