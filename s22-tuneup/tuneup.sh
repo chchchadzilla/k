@@ -220,6 +220,7 @@ cmd_notif_mute() {
     [[ -n "${ALL[$p]:-}" ]] || { warn "not installed: $p"; continue; }
     is_protected "$p" && { warn "refusing to mute protected app: $p"; continue; }
     if err=$(mute_one "$p" ignore); then ok "muted  $p"; echo "$p" >> "$BACKUP/notif-muted.txt"; n=$((n+1))
+    elif [[ "$err" == *"not found"* ]]; then log "${c_dim}skip   $p (already removed)${c_off}"
     else warn "could not mute $p: $err"; fi
   done
   sort -u "$BACKUP/notif-muted.txt" -o "$BACKUP/notif-muted.txt" 2>/dev/null || true
