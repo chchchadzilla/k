@@ -1,0 +1,7 @@
+com.google.android.apps.authenticator2
+com.azure.authenticator
+com.x8bit.bitwarden
+com.chase.sig.android
+com.spotify.music
+org.telegram.messenger
+com.termux

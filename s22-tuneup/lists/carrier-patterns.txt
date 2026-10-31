@@ -1,0 +1,21 @@
+# Carrier bloat, matched by regex against system packages when you pass --carrier.
+# ~regex  = include if it matches.   !~regex = never include even if an include matched.
+# Visual voicemail and APN/config helpers are excluded on purpose.
+~^com\.att\.
+~^com\.asurion\.
+~^com\.vzw\.
+~^com\.verizon\.
+~^com\.vcast\.
+~^com\.tmobile\.
+~^com\.sprint\.
+~^com\.cequint\.
+~^com\.ironsrc\.
+~^com\.aura\.
+~^com\.dti\.
+~^com\.uscc\.
+!~vvm
+!~voicemail
+!~^com\.vzw\.apnlib
+!~^com\.verizon\.mips
+!~^com\.tmobile\.pr\.adapt
+!~^com\.att\.iqi$

@@ -1,0 +1,11 @@
+Latency: 0ms [512B Data Write]
+Recent Disk Write Speed (kB/s) = 22861
+Data-Free: 179875172K / 484048844K total = 37% free
+File-based Encryption: true
+App Size: 52200649728
+App Data Size: 73971984018
+App Cache Size: 47574089216
+Package Names: ["com.google.android.webview.beta","com.spotify.music","org.telegram.messenger","com.chase.sig.android","com.azure.authenticator"]
+App Sizes: [263849984,157286400,104857600,52428800,31457280]
+App Data Sizes: [0,524288000,2097152000,10485760,1048576]
+Cache Sizes: [0,104857600,52428800,1048576,0]

@@ -1,0 +1,77 @@
+# Tier 1: removed by `tuneup.sh debloat --apply`. Preinstalled junk that nothing else depends on.
+# Only packages that actually exist on the phone AND are system packages are touched; the rest are skipped.
+# Format: package  # what it is
+
+# --- Bixby (replace with Google Assistant/Gemini or nothing) ---
+com.samsung.android.bixby.agent             # Bixby Voice
+com.samsung.android.bixby.wakeup            # Bixby wake-up listener (always-on mic)
+com.samsung.android.bixby.service
+com.samsung.android.bixbyvision.framework   # Bixby Vision
+com.samsung.android.visionintelligence      # Bixby Vision
+com.samsung.android.app.settings.bixby      # Bixby settings shim
+com.samsung.android.bixby.ondevice.enus     # on-device Bixby language pack
+
+# --- Samsung ads / promo / "discovery" feeds ---
+com.samsung.android.app.spage               # Samsung Free (the swipe-left news/ads feed)
+com.samsung.android.voc                     # Samsung Members (constant promo notifications)
+com.samsung.android.smartsuggestions        # Smart suggestions widget
+com.samsung.android.app.sreminder           # Samsung Assistant / Bixby Home cards (not Reminder)
+com.samsung.android.themestore              # Galaxy Themes (sales notifications)
+com.samsung.android.app.samsungshop         # Samsung Shop
+com.samsung.android.app.tips                # Tips (nag notifications)
+com.samsung.android.beaconmanager           # retail-store beacon ads
+com.sec.android.app.sns3                    # social network sync (ancient)
+com.samsung.android.app.ledbackcover
+com.samsung.android.app.ledcoverdream
+
+# --- AR gimmicks ---
+com.samsung.android.ardrawing               # AR Doodle
+com.samsung.android.aremoji                 # AR Emoji
+com.samsung.android.aremojieditor
+com.samsung.android.arzone                  # AR Zone
+com.samsung.android.livestickers
+com.samsung.android.app.camera.sticker.facearavatar.preload
+com.samsung.android.mdecservice             # MDE service (multi-device experience)
+
+# --- Game Launcher / Kids / Smart Switch ---
+com.samsung.android.game.gamehome           # Game Launcher (notifications + background)
+com.samsung.android.game.gametools          # Game Booster overlay
+com.samsung.android.kidsinstaller           # Samsung Kids installer
+com.sec.android.app.kidshome                # Samsung Kids
+com.sec.android.easyMover                   # Smart Switch (you've already migrated)
+com.sec.android.easyMover.Agent
+
+# --- Facebook / Meta preloads (does NOT touch the real Facebook/Messenger apps if you installed them) ---
+com.facebook.appmanager                     # silent background installer/updater for Meta apps
+com.facebook.services
+com.facebook.system
+
+# --- Microsoft preloads ---
+com.microsoft.skydrive                      # OneDrive (stub)
+com.microsoft.appmanager                    # Link to Windows (phone side)
+com.samsung.android.mdx                     # Link to Windows service
+com.samsung.android.mdx.quickboard
+
+# --- Google preloads nobody asked for ---
+com.google.android.apps.tachyon             # Google Meet / Duo
+com.google.android.apps.youtube.music       # YouTube Music
+com.google.android.videos                   # Google TV / Play Movies
+com.google.android.printservice.recommendation
+com.google.ar.lens                          # Google Lens standalone
+com.google.android.apps.podcasts
+
+# --- misc Samsung stubs ---
+com.samsung.android.drivelink.stub          # Android Auto placeholder
+com.samsung.android.allshare.service.fileshare
+com.samsung.android.privateshare            # Private Share (blockchain file sharing)
+com.samsung.android.app.watchmanagerstub    # Galaxy Wearable placeholder (real app is in optional list)
+com.samsung.android.svoiceime
+com.samsung.android.app.dofviewer
+com.samsung.android.app.soundpicker
+com.sec.android.app.vepreload               # Video editor preload
+com.sec.android.mimage.avatarstickers
+com.samsung.android.service.tagservice
+com.monotype.android.font.foundation        # extra fonts
+com.samsung.android.app.readingglass        # Magnifier (also in Accessibility)
+com.sec.android.app.sbrowser.edge.*         # Samsung Internet edge panel plugins
+com.samsung.android.service.peoplestripe    # People edge panel
