@@ -1,9 +1,15 @@
   In-memory daily stats
     user=0
-      package=org.telegram.messenger totalTimeUsed="00:12:00" totalTimeVisible="00:12:00" lastTimeUsed="2026-10-31 06:50:00" lastTimeVisible="2026-10-31 06:50:00" appLaunchCount=4
-      package=com.termux totalTimeUsed="00:40:00" lastTimeUsed="2026-10-31 07:10:00" appLaunchCount=2
+    time="2026-10-30 01:09:39" type=NOTIFICATION_INTERRUPTION package=com.google.android.gm channelId=^nc_1_mail_x@gmail.com flags=0x0
+    time="2026-10-30 01:31:48" type=ACTIVITY_RESUMED package=com.google.android.googlequicksearchbox class=com.google.android.apps.search.assistant.surfaces.voice.robin.ui.floaty.activity.FloatyActivity instanceId=37213831 taskRootPackage=com.google.android.googlequicksearchbox taskRootClass=x flags=0x0
+  mDumpInitLastTimeSaved="2026-10-31 00:06:16" mDumpInitEndTime="2026-10-31 00:06:17"
+      package=com.google.android.networkstack.tethering totalTimeUsed="00:00" lastTimeUsed="1969-12-31 16:00:00" totalTimeVisible="00:00" lastTimeVisible="1969-12-31 16:00:00" lastTimeComponentUsed="2026-10-31 00:06:53" totalTimeFS="00:00" lastTimeFS="1969-12-31 16:00:00" appLaunchCount=0
+      package=com.amazon.mShop.android.shopping totalTimeUsed="00:00" lastTimeUsed="1969-12-31 16:00:00" totalTimeVisible="00:00" lastTimeVisible="1969-12-31 16:00:00" lastTimeComponentUsed="2026-10-30 23:17:53" totalTimeFS="00:00" lastTimeFS="1969-12-31 16:00:00" appLaunchCount=0
+      package=org.telegram.messenger totalTimeUsed="00:12" lastTimeUsed="2026-10-31 06:50:00" totalTimeVisible="00:12" lastTimeVisible="2026-10-31 06:50:00" lastTimeComponentUsed="2026-10-31 06:50:00" totalTimeFS="00:00" lastTimeFS="1969-12-31 16:00:00" appLaunchCount=4
+      package=com.termux totalTimeUsed="00:40" lastTimeUsed="2026-10-31 07:10:00" totalTimeVisible="00:40" lastTimeVisible="2026-10-31 07:10:00" lastTimeComponentUsed="2026-10-31 07:10:00" totalTimeFS="00:00" lastTimeFS="1969-12-31 16:00:00" appLaunchCount=2
   In-memory yearly stats
     user=0
-      package=com.spotify.music totalTimeUsed="01:00:00" lastTimeUsed="2026-03-02 10:00:00" appLaunchCount=1
-      package=org.telegram.messenger totalTimeUsed="40:00:00" lastTimeUsed="2026-10-31 06:50:00" appLaunchCount=400
-      package=com.azure.authenticator totalTimeUsed="00:01:00" lastTimeUsed="2026-01-15 09:00:00" appLaunchCount=3
+      package=com.spotify.music totalTimeUsed="01:00" lastTimeUsed="2026-03-02 10:00:00" totalTimeVisible="01:00" lastTimeVisible="2026-03-02 10:00:00" lastTimeComponentUsed="2026-03-02 10:00:00" totalTimeFS="00:00" lastTimeFS="1969-12-31 16:00:00" appLaunchCount=1
+      package=org.telegram.messenger totalTimeUsed="40:00" lastTimeUsed="2026-10-31 06:50:00" totalTimeVisible="40:00" lastTimeVisible="2026-10-31 06:50:00" lastTimeComponentUsed="2026-10-31 06:50:00" totalTimeFS="00:00" lastTimeFS="1969-12-31 16:00:00" appLaunchCount=400
+      package=com.azure.authenticator totalTimeUsed="00:01" lastTimeUsed="2026-01-15 09:00:00" totalTimeVisible="00:01" lastTimeVisible="2026-01-15 09:00:00" lastTimeComponentUsed="2026-01-15 09:00:00" totalTimeFS="00:00" lastTimeFS="1969-12-31 16:00:00" appLaunchCount=3
+      package=com.amazon.mShop.android.shopping totalTimeUsed="00:00" lastTimeUsed="2026-10-01 12:00:00" totalTimeVisible="00:00" lastTimeVisible="2026-10-01 12:00:00" lastTimeComponentUsed="2026-10-30 23:17:53" totalTimeFS="00:00" lastTimeFS="1969-12-31 16:00:00" appLaunchCount=1

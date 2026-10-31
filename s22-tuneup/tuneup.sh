@@ -333,19 +333,25 @@ cmd_speed() {
   ok "$n kept preloads restricted from running in background (undo: cmd appops set <pkg> RUN_ANY_IN_BACKGROUND allow)"
 }
 
-# last-used time per package from the system's usage stats (max across daily/weekly/monthly/yearly buckets)
+# last-used (foreground) time per package from the system's usage stats, max across the daily/weekly/monthly/yearly
+# buckets. 1969/1970 means never opened. No --user flag: on Android 14+ dumpsys usagestats treats extra args as package filters.
 usage_last_used() {
-  ash dumpsys usagestats --user "$USER_ID" 2>/dev/null | grep -oE 'package=[A-Za-z0-9._]+ .*lastTimeUsed="[^"]+"' \
-    | sed -E 's/^package=([^ ]+) .*lastTimeUsed="([^"]+)".*/\1\t\2/' | sort -k1,1 -k2,2r | awk -F'\t' '!seen[$1]++'
+  ash dumpsys usagestats | awk '
+    /^[[:space:]]*package=/ {
+      pkg=""; lu=""
+      for (i=1;i<=NF;i++) { if ($i ~ /^package=/) pkg=substr($i,9); else if ($i ~ /^lastTimeUsed="/) { lu=substr($i,15,10); } }
+      if (pkg!="" && lu!="" && lu>last[pkg]) last[pkg]=lu }
+    END { for (p in last) printf "%s\t%s\n", p, last[p] }'
 }
-# sizes per package from dumpsys diskstats -> "pkg<TAB>appMB<TAB>dataMB<TAB>cacheMB"
+# sizes per package from dumpsys diskstats -> "pkg<TAB>appMB<TAB>dataMB<TAB>cacheMB" (empty if the daily stats job has not run yet)
 disk_sizes() {
   ash dumpsys diskstats | awk '
-    /^Package Names:/ {n=split(substr($0,index($0,"[")+1), a, /[",\[\] ]+/); for(i=1;i<=n;i++) if(a[i]!="") names[++np]=a[i]}
-    /^App Sizes:/      {n=split(substr($0,index($0,"[")+1), a, /[,\[\] ]+/); for(i=1;i<=n;i++) if(a[i]!="") app[++na]=a[i]}
-    /^App Data Sizes:/ {n=split(substr($0,index($0,"[")+1), a, /[,\[\] ]+/); for(i=1;i<=n;i++) if(a[i]!="") dat[++nd]=a[i]}
-    /^Cache Sizes:/    {n=split(substr($0,index($0,"[")+1), a, /[,\[\] ]+/); for(i=1;i<=n;i++) if(a[i]!="") cac[++nc]=a[i]}
-    END {for(i=1;i<=np;i++) printf "%s\t%d\t%d\t%d\n", names[i], app[i]/1048576, dat[i]/1048576, cac[i]/1048576}'
+    function arr(line, out,   n,i,v) { sub(/^[^:]*:[[:space:]]*/, "", line); gsub(/[][" ]/, "", line); n=split(line, v, ","); for(i=1;i<=n;i++) out[i]=v[i]; return n }
+    /^Package Names:/ {np=arr($0, names)}
+    /^App Sizes:/      {arr($0, app)}
+    /^App Data Sizes:/ {arr($0, dat)}
+    /^Cache Sizes:/    {arr($0, cac)}
+    END {for(i=1;i<=np;i++) if(names[i]!="") printf "%s\t%d\t%d\t%d\n", names[i], app[i]/1048576, dat[i]/1048576, cac[i]/1048576}'
 }
 cmd_unused() {
   local days=60; while [[ $# -gt 0 ]]; do case "$1" in --days) days="$2"; shift;; *) die "unknown option $1";; esac; shift; done
@@ -355,13 +361,13 @@ cmd_unused() {
   usage_last_used > "$tmp/used"
   disk_sizes > "$tmp/sizes"
   local cutoff; cutoff=$(date -d "-$days days" +%Y-%m-%d 2>/dev/null || date -v-"${days}"d +%Y-%m-%d 2>/dev/null || echo 0000-00-00)
-  log "Apps you installed, not opened since $cutoff ($days days). 'never' = no use recorded in the last year."
+  log "Apps you installed, not opened since $cutoff ($days days). 'never' = not opened in the last year (background-only use does not count)."
   log "Sizes in MB. PROT = protected (authenticator/bank/etc, never removed by this tool)."
   printf '%-12s %6s %6s %5s  %s\n' LAST_USED APP DATA PROT PACKAGE
   awk -F'\t' -v cutoff="$cutoff" '
-    FNR==NR {last[$1]=substr($2,1,10); next}
+    FILENAME ~ /used$/  {last[$1]=$2; next}
     FILENAME ~ /sizes$/ {app[$1]=$2; dat[$1]=$3; next}
-    { p=$1; l=(p in last)?last[p]:"never"; if (l=="never" || l<cutoff) printf "%s\t%s\t%s\t%s\n", l, (p in app)?app[p]:"?", (p in dat)?dat[p]:"?", p }' \
+    { p=$1; l=(p in last)?last[p]:"never"; if (l<"1971") l="never"; if (l=="never" || l<cutoff) printf "%s\t%s\t%s\t%s\n", l, (p in app)?app[p]:"?", (p in dat)?dat[p]:"?", p }' \
     "$tmp/used" "$tmp/sizes" "$tmp/user" | sort | while IFS=$'\t' read -r l a d p; do
       local prot="-"; is_protected "$p" && prot="yes"
       printf '%-12s %6s %6s %5s  %s\n' "$l" "$a" "$d" "$prot" "$p"
