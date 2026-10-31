@@ -118,8 +118,36 @@ expand_carrier() {
 }
 
 # ---------- commands ----------
-cmd_pair()    { [[ $# -ge 1 ]] || die "usage: tuneup.sh pair <pairing-port>"; "$ADB" pair "127.0.0.1:$1"; }
-cmd_connect() { [[ $# -ge 1 ]] || die "usage: tuneup.sh connect <port>"; "$ADB" connect "127.0.0.1:$1"; "$ADB" get-state; }
+cmd_pair() {
+  [[ $# -ge 1 ]] || die "usage: tuneup.sh pair <pairing-port>   (the port in the 'Pair device with pairing code' popup)"
+  local out; out=$("$ADB" pair "127.0.0.1:$1" 2>&1); echo "$out"
+  [[ "$out" == *"Successfully paired"* ]] || return 1
+  cat <<MSG
+
+Paired. That was step 1 of 2 and you never need to do it again.
+STEP 2: close the popup, scroll down in Settings to "IP address & port" (a DIFFERENT number), then run:
+    ./tuneup.sh connect <that port>
+MSG
+}
+cmd_connect() {
+  local port="${1:-}" out
+  if [[ -z "$port" ]]; then
+    log "No port given, trying mDNS discovery (works on some phones)..."
+    port=$("$ADB" mdns services 2>/dev/null | tr -d '\r' | grep -i 'adb-tls-connect' | grep -oE ':[0-9]+[[:space:]]*$' | tr -dc '0-9' | head -1)
+    [[ -n "$port" ]] || die "could not discover the port. Read it from Settings > Developer options > Wireless debugging > 'IP address & port' and run: ./tuneup.sh connect <port>"
+    log "found port $port"
+  fi
+  out=$("$ADB" connect "127.0.0.1:$port" 2>&1); echo "$out"
+  sleep 1
+  local st; st=$("$ADB" get-state 2>&1 | tr -d '\r')
+  if [[ "$st" == device ]]; then ok "connected. Next: ./tuneup.sh report"; return 0; fi
+  warn "state: $st"
+  case "$out$st" in
+    *refused*) log "Connection refused = wrong port. The connect port is the one under 'IP address & port', NOT the pairing popup.";;
+    *offline*) log "Offline = stale port. Toggle Wireless debugging off and on, read the NEW 'IP address & port', then: adb kill-server; ./tuneup.sh connect <new port>";;
+  esac
+  return 1
+}
 cmd_status()  { "$ADB" devices -l; "$ADB" get-state 2>/dev/null || true; }
 
 cmd_snapshot() {
